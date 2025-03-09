@@ -21,7 +21,7 @@ export type LocalGurdian = {
 }
 
 export type Student = {
-  id: number
+  id: string
   name: UserName
   email: string
   gender: 'male' | 'female'
