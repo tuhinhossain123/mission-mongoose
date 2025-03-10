@@ -1,12 +1,17 @@
-import { Schema, model } from 'mongoose'
-import { Guardian, LocalGuardian, Student, UserName } from './student-interface'
+import { Schema, model } from 'mongoose';
+import {
+  Guardian,
+  LocalGuardian,
+  Student,
+  UserName,
+} from './student-interface';
 
 // UserName Schema
 const userNameSchema = new Schema<UserName>({
   firstName: { type: String },
   middleName: { type: String },
   lastName: { type: String },
-})
+});
 
 // Guardian Schema
 const guardianSchema = new Schema<Guardian>({
@@ -16,7 +21,7 @@ const guardianSchema = new Schema<Guardian>({
   motherName: { type: String },
   motherOccupation: { type: String },
   motherContactNo: { type: String },
-})
+});
 
 // Local Guardian Schema
 const localGuardianSchema = new Schema<LocalGuardian>({
@@ -24,7 +29,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
   occupation: { type: String },
   contactNo: { type: String },
   address: { type: String },
-})
+});
 
 // Student Schema
 const studentSchema = new Schema<Student>({
@@ -45,6 +50,6 @@ const studentSchema = new Schema<Student>({
   localGuardian: localGuardianSchema,
   profileImg: { type: String },
   isActive: { type: String, enum: ['active', 'inActive'] },
-})
+});
 
-export const StudentModel = model<Student>('Student', studentSchema)
+export const StudentModel = model<Student>('Student', studentSchema);
