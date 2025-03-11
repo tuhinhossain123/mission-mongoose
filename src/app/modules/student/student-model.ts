@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import validator, { isAlpha } from 'validator';
+// import validator from 'validator';
 import {
   Guardian,
   LocalGuardian,
@@ -13,26 +13,26 @@ const userNameSchema = new Schema<UserName>({
     type: String,
     trim: true, // trim hocche shame piche kono space thakle seta remove kore
     required: [true, 'First Name is Required'],
-    validate: {
-      //mongoose custom validation eta
-      validator: function (value: string) {
-        const firstNameStr =
-          value.charAt(0).toLocaleUpperCase() + value.slice(1);
-        return firstNameStr === value;
-      },
-      message: '{VALUE} is no capitalize formate',
-    }, // validate kore name er first word boro r baki gula choto thakar jonne,,
+    // validate: {
+    //   //mongoose custom validation eta
+    //   validator: function (value: string) {
+    //     const firstNameStr =
+    //       value.charAt(0).toLocaleUpperCase() + value.slice(1);
+    //     return firstNameStr === value;
+    //   },
+    //   message: '{VALUE} is no capitalize formate',
+    // }, // validate kore name er first word boro r baki gula choto thakar jonne,,
   },
   middleName: { type: String, trim: true },
   lastName: {
     type: String,
     trim: true,
     required: [true, 'Last Name is Required'],
-    validate: {
-      //3rd party libary validation 
-      validator: (value) => validator.isAlpha(value),
-      message: '{VALUE} is not valid ',
-    },
+    // validate: {
+    //   //3rd party libary validation
+    //   validator: (value) => validator.isAlpha(value),
+    //   message: '{VALUE} is not valid ',
+    // },
   },
 });
 
@@ -108,11 +108,11 @@ const studentSchema = new Schema<Student>({
     trim: true,
     required: [true, 'Email is Required'],
     unique: true,
-    validate: {
-      //3rd party libary validation 
-      validator: (value) => validator.isEmail(value),
-      message: '{VALUE} is not valid email',
-    },
+    // validate: {
+    //   //3rd party libary validation
+    //   validator: (value) => validator.isEmail(value),
+    //   message: '{VALUE} is not valid email',
+    // },
   },
   gender: {
     type: String,
