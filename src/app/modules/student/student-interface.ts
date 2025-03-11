@@ -24,7 +24,7 @@ export type Student = {
   id: number;
   name: UserName;
   email: string;
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'other';
   dateOfBirth: string;
   contactNo: string;
   emergencyContactNo: string;
@@ -34,5 +34,5 @@ export type Student = {
   guardian: Guardian;
   localGuardian: LocalGuardian;
   profileImg?: string;
-  isActive: 'active' | 'inActive';
+  isActive: 'active' | 'block';
 };
