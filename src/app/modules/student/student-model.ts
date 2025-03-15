@@ -209,8 +209,9 @@ studentSchema.pre('save', async function (next) {
 });
 
 // post save middleware/ hook
-studentSchema.post('save', function () {
-  console.log(this, 'post hook : we saved our  data');
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
 });
 
 //------------for creating an static method-----------
