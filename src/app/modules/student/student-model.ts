@@ -7,6 +7,8 @@ import {
   TStudent,
   TUserName,
 } from './student-interface';
+import bcrypt from 'bcrypt';
+import config from '../../config';
 
 // UserName Schema
 const userNameSchema = new Schema<TUserName>({
@@ -103,6 +105,12 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     required: [true, 'Id is Required'],
     unique: true,
   },
+  password: {
+    type: String,
+    trim: true,
+    required: [true, 'Password is Required'],
+    unique: true,
+  },
   name: { type: userNameSchema, required: [true, 'Name Field is Required'] },
   email: {
     type: String,
@@ -184,6 +192,25 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     default: 'active',
     required: true,
   },
+});
+
+// pre save middleware/hook
+studentSchema.pre('save', async function (next) {
+  // console.log(this, 'pre hook : we will save the data');
+
+  //hashing pasword and save into db
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
+  const user = this;
+  user.password = await bcrypt.hash(
+    user.password,
+    Number(config.bcrypt_salt_rounds),
+  );
+  next();
+});
+
+// post save middleware/ hook
+studentSchema.post('save', function () {
+  console.log(this, 'post hook : we saved our  data');
 });
 
 //------------for creating an static method-----------
