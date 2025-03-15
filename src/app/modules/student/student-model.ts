@@ -98,100 +98,133 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 });
 
 // Student Schema
-const studentSchema = new Schema<TStudent, StudentModel>({
-  id: {
-    type: Number,
-    trim: true,
-    required: [true, 'Id is Required'],
-    unique: true,
-  },
-  password: {
-    type: String,
-    trim: true,
-    required: [true, 'Password is Required'],
-    unique: true,
-  },
-  name: { type: userNameSchema, required: [true, 'Name Field is Required'] },
-  email: {
-    type: String,
-    trim: true,
-    required: [true, 'Email is Required'],
-    unique: true,
-    // validate: {
-    //   //3rd party libary validation
-    //   validator: (value) => validator.isEmail(value),
-    //   message: '{VALUE} is not valid email',
-    // },
-  },
-  gender: {
-    type: String,
-    trim: true,
-    enum: {
-      values: ['male', 'female', 'other'],
-      message: "{VALUE} is Not Valid : 'male', 'female', 'other'",
+const studentSchema = new Schema<TStudent, StudentModel>(
+  {
+    id: {
+      type: String,
+      trim: true,
+      required: [true, 'Id is Required'],
+      unique: true,
     },
-    required: true,
-  },
-  dateOfBirth: {
-    type: String,
-    trim: true,
-    required: [true, 'Date Of Birth is Required'],
-  },
-  contactNo: {
-    type: String,
-    trim: true,
-    required: [true, 'Contact No is Required'],
-    minlength: [11, 'number min length 11'],
-    maxlength: [11, 'Number more then longer 11 chearecters'],
-  },
-  emergencyContactNo: {
-    type: String,
-    trim: true,
-    required: [true, 'Emargency Contact No is Required'],
-  },
-  bloodGroup: {
-    type: String,
-    trim: true,
-    enum: {
-      values: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
-      message:
-        "{VALUE} is Not Valid: 'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'",
+    password: {
+      type: String,
+      trim: true,
+      required: [true, 'Password is Required'],
     },
-    required: true,
-  },
-  presentAddress: {
-    type: String,
-    trim: true,
-    required: [true, 'Present Address is Required'],
-  },
-  permanentAddress: {
-    type: String,
-    trim: true,
-    required: [true, 'Permanent Address is Required'],
-  },
-  guardian: {
-    type: guardianSchema,
-    required: [true, 'Guardin Field is Required'],
-  },
-  localGuardian: {
-    type: localGuardianSchema,
-    required: [true, 'Local Guardian Field is Required'],
-  },
-  profileImg: {
-    type: String,
-    trim: true,
-    required: [true, 'Student Profile Images is Required'],
-  },
-  isActive: {
-    type: String,
-    trim: true,
-    enum: {
-      values: ['active', 'block'],
-      message: '{VALUE} is Valid',
+    name: { type: userNameSchema, required: [true, 'Name Field is Required'] },
+    email: {
+      type: String,
+      trim: true,
+      required: [true, 'Email is Required'],
+      unique: true,
+      // validate: {
+      //   //3rd party libary validation
+      //   validator: (value) => validator.isEmail(value),
+      //   message: '{VALUE} is not valid email',
+      // },
     },
-    default: 'active',
-    required: true,
+    gender: {
+      type: String,
+      trim: true,
+      enum: {
+        values: ['male', 'female', 'other'],
+        message: "{VALUE} is Not Valid : 'male', 'female', 'other'",
+      },
+      required: true,
+    },
+    dateOfBirth: {
+      type: String,
+      trim: true,
+      required: [true, 'Date Of Birth is Required'],
+    },
+    contactNo: {
+      type: String,
+      trim: true,
+      required: [true, 'Contact No is Required'],
+      minlength: [11, 'number min length 11'],
+      maxlength: [11, 'Number more then longer 11 chearecters'],
+    },
+    emergencyContactNo: {
+      type: String,
+      trim: true,
+      required: [true, 'Emargency Contact No is Required'],
+    },
+    bloodGroup: {
+      type: String,
+      trim: true,
+      enum: {
+        values: ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'],
+        message:
+          "{VALUE} is Not Valid: 'A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'",
+      },
+      required: true,
+    },
+    presentAddress: {
+      type: String,
+      trim: true,
+      required: [true, 'Present Address is Required'],
+    },
+    permanentAddress: {
+      type: String,
+      trim: true,
+      required: [true, 'Permanent Address is Required'],
+    },
+    guardian: {
+      type: guardianSchema,
+      required: [true, 'Guardin Field is Required'],
+    },
+    localGuardian: {
+      type: localGuardianSchema,
+      required: [true, 'Local Guardian Field is Required'],
+    },
+    profileImg: {
+      type: String,
+      trim: true,
+      required: [true, 'Student Profile Images is Required'],
+    },
+    isActive: {
+      type: String,
+      trim: true,
+      enum: {
+        values: ['active', 'block'],
+        message: '{VALUE} is Valid',
+      },
+      default: 'active',
+      required: true,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
+  {
+    toJSON: {
+      virtuals: true,
+    },
+  },
+);
+
+// virtual
+studentSchema.virtual('fullName').get(function () {
+  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+});
+
+// query middleware
+studentSchema.pre('find', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// find diye deled korar poreo jokhn findOne diye query korle data chole ase ei jonne findOne hookuse kora
+studentSchema.pre('findOne', async function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// find use na koe jodi aggregate use kori tahole data chole asbe tai eta use korbo
+studentSchema.pre('aggregate', async function (next) {
+  this.pipeline().unshift({ $match: { $ne: true } });
+  next();
 });
 
 // pre save middleware/hook
