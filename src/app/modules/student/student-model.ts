@@ -1,11 +1,10 @@
 import { Schema, model } from 'mongoose';
 // import validator from 'validator';
 import {
-  StudentMethods,
+  StudentModel,
   TGuardian,
   TLocalGuardian,
   TStudent,
-  TStudentModel,
   TUserName,
 } from './student-interface';
 
@@ -97,7 +96,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 });
 
 // Student Schema
-const studentSchema = new Schema<TStudent, TStudentModel, StudentMethods>({
+const studentSchema = new Schema<TStudent, StudentModel>({
   id: {
     type: Number,
     trim: true,
@@ -187,9 +186,17 @@ const studentSchema = new Schema<TStudent, TStudentModel, StudentMethods>({
   },
 });
 
-studentSchema.methods.isUserExits = async function (id: number) {
-  const existinger = await Student.findOne({id});
-  return existinger
+//------------for creating an static method-----------
+studentSchema.statics.isUserExists = async function (id: number) {
+  const existingUser = await Student.findOne({ id });
+  return existingUser;
 };
 
-export const Student = model<TStudent, TStudentModel>('Student', studentSchema);
+//---------------for creating an custom instance method---------------------------
+
+// studentSchema.methods.isUserExists = async function (id: number) {
+//   const existingUser = await Student.findOne({ id });
+//   return existingUser
+// };
+
+export const Student = model<TStudent, StudentModel>('Student', studentSchema);
