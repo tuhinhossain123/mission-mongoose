@@ -221,7 +221,7 @@ studentSchema.pre('findOne', async function (next) {
   next();
 });
 
-// find use na koe jodi aggregate use kori tahole data chole asbe tai eta use korbo
+// find use na kore jodi aggregate use kori tahole data chole asbe tai eta use korbo
 studentSchema.pre('aggregate', async function (next) {
   this.pipeline().unshift({ $match: { $ne: true } });
   next();
