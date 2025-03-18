@@ -1,8 +1,12 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { UserService } from './user-service';
 
 // post request
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { password, students: studentData } = req.body;
     // zod validation code ekhane
@@ -26,12 +30,8 @@ const createStudent = async (req: Request, res: Response) => {
       messagel: 'Student Created successfully',
       data: result,
     });
-  } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      messagel: err.message || 'Something Went Wrong',
-      error: err,
-    });
+  } catch (err) {
+    next(err);
   }
 };
 
