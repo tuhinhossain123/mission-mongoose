@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { UserService } from './user-service';
+import httpStatus from 'http-status';
+import sendResponse from '../../utils/sendResponse';
 
 // post request
 const createStudent = async (
@@ -13,21 +15,11 @@ const createStudent = async (
     // const zodParseData = studentValidationSchema.parse(studentData);
     const result = await UserService.createStudentIntoDB(password, studentData);
 
-    // Joi validation code ekhane
-    // const { error, value } = studentValidationSchema.validate(studentData);
-    // const result = await StudentServices.createStudentIntoDB(value);
-    // if (error) {
-    //   res.status(500).json({
-    //     success: false,
-    //     messagel: 'Something Went Wrong',
-    //     error: error.details,
-    //   });
-    // }
-
     //  send response
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
       success: true,
-      messagel: 'Student Created successfully',
+      message: 'Student Created Successfully',
       data: result,
     });
   } catch (err) {

@@ -8,8 +8,6 @@ import {
   TUserName,
 } from './student-interface';
 
-
-
 // UserName Schema
 const userNameSchema = new Schema<TUserName>({
   firstName: {
@@ -218,7 +216,6 @@ studentSchema.pre('aggregate', async function (next) {
   this.pipeline().unshift({ $match: { $ne: true } });
   next();
 });
-
 
 //------------for creating an static method-----------
 studentSchema.statics.isUserExists = async function (id: number) {
