@@ -26,39 +26,45 @@ const localGuardianValidationSchema = z.object({
 });
 
 // Student Schema
-const studentValidationSchema = z.object({
-  id: z.string().min(1, 'Id is Required'),
-  password: z.string().trim(),
-  name: userNameValidationSchema,
-  email: z
-    .string()
-    .trim()
-    .email('Invalid email format')
-    .min(1, 'Email is Required'),
-  gender: z.enum(['male', 'female', 'other'], {
-    errorMap: () => ({
-      message: "Gender must be 'male', 'female', or 'other'",
+const createStudentValidationSchema = z.object({
+  body: z.object({
+    password: z.string().trim(),
+    student: z.object({
+      name: userNameValidationSchema,
+      email: z
+        .string()
+        .trim()
+        .email('Invalid email format')
+        .min(1, 'Email is Required'),
+      gender: z.enum(['male', 'female', 'other'], {
+        errorMap: () => ({
+          message: "Gender must be 'male', 'female', or 'other'",
+        }),
+      }),
+      dateOfBirth: z.string().trim().min(1, 'Date Of Birth is Required'),
+      contactNo: z
+        .string()
+        .trim()
+        .length(11, 'Contact No must be exactly 11 characters'),
+      emergencyContactNo: z
+        .string()
+        .trim()
+        .min(1, 'Emergency Contact No is Required'),
+      bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'], {
+        errorMap: () => ({ message: 'Invalid Blood Group' }),
+      }),
+      presentAddress: z.string().trim().min(1, 'Present Address is Required'),
+      permanentAddress: z
+        .string()
+        .trim()
+        .min(1, 'Permanent Address is Required'),
+      guardian: guardianValidationSchema,
+      localGuardian: localGuardianValidationSchema,
+      profileImg: z.string().trim().min(1, 'Student Profile Image is Required'),
     }),
   }),
-  dateOfBirth: z.string().trim().min(1, 'Date Of Birth is Required'),
-  contactNo: z
-    .string()
-    .trim()
-    .length(11, 'Contact No must be exactly 11 characters'),
-  emergencyContactNo: z
-    .string()
-    .trim()
-    .min(1, 'Emergency Contact No is Required'),
-  bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'], {
-    errorMap: () => ({ message: 'Invalid Blood Group' }),
-  }),
-  presentAddress: z.string().trim().min(1, 'Present Address is Required'),
-  permanentAddress: z.string().trim().min(1, 'Permanent Address is Required'),
-  guardian: guardianValidationSchema,
-  localGuardian: localGuardianValidationSchema,
-  profileImg: z.string().trim().min(1, 'Student Profile Image is Required'),
-  isActive: z.enum(['active', 'block']).default('active'),
-  isDeleted: z.boolean(),
 });
 
-export default studentValidationSchema;
+export const studentValidations = {
+  createStudentValidationSchema,
+};
