@@ -1,17 +1,18 @@
 import httpStatus from 'http-status';
 import sendResponse from '../../utils/sendResponse';
 import catchAsync from '../../utils/catchAsync';
+import { AcademicSemesterServices } from './academic-semester-service';
 
 // post request
 const createAcademicSemester = catchAsync(async (req, res) => {
-  const { password, students: studentData } = req.body;
-  // zod validation code ekhane
-  const result = await UserService.createStudentIntoDB(password, studentData);
+  const result = await AcademicSemesterServices.createAcademicSemesterIntoDB(
+    req.body,
+  );
   //  send response
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Student Created Successfully',
+    message: 'Academic Semester is Created Successfully',
     data: result,
   });
 });
