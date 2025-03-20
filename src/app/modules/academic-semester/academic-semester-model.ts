@@ -31,7 +31,7 @@ const academicSemesterSchema = new Schema<TAcademicSemester>(
   },
 );
 
-// academic semester check
+// academic semester check ekhane and semester code validation services a
 academicSemesterSchema.pre('save', async function (next) {
   const isSemesterExists = await AcademicSemester.findOne({
     year: this.year,
