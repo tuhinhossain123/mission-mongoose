@@ -1,12 +1,13 @@
 import config from '../../config';
-import { TAcademicSemester } from '../academic-semester/academic-semester-interface';
+import { AcademicSemesterModel } from '../academic-semester/academic-semester-model';
 import { TStudent } from '../student/student-interface';
 import { Student } from '../student/student-model';
 import { TUser } from './user-interface';
 import { User } from './user-model';
+import { generetdStudentId } from './user-utils';
 
 // post request
-const createStudentIntoDB = async (password: string, studentData: TStudent) => {
+const createStudentIntoDB = async (password: string, payload: TStudent) => {
   //------------for creating an static method----------- student service theke asce code eta
   //   if (await Student.isUserExists(studentData.id)) {
   //     throw new Error('User already exists');
@@ -21,13 +22,13 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   //   -------set student role-------
   userData.role = 'student';
 
-  // year semester code 4 digit number
-  const generetdStudent = (payload:TAcademicSemester){
-
-  }
+  // find academic semester info
+  const admisionSemester = await AcademicSemesterModel.findById(
+    payload.admissionSemester,
+  );
 
   //   set manually generated id
-  userData.id = generetdStudent();
+  userData.id = await generetdStudentId(admisionSemester);
 
   //------- create a user
   const NewUser = await User.create(userData); //built in static method
@@ -35,10 +36,10 @@ const createStudentIntoDB = async (password: string, studentData: TStudent) => {
   //   ------ create a student
   if (Object.keys(NewUser).length) {
     //set id,_id as user
-    studentData.id = NewUser.id;
-    studentData.user = NewUser._id; //reference _id
+    payload.id = NewUser.id;
+    payload.user = NewUser._id; //reference _id
 
-    const newStudent = await Student.create(studentData);
+    const newStudent = await Student.create(payload);
     return newStudent;
   }
   return NewUser;

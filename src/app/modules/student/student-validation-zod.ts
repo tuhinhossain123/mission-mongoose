@@ -27,6 +27,7 @@ const localGuardianValidationSchema = z.object({
 
 // Student Schema
 const createStudentValidationSchema = z.object({
+  
   body: z.object({
     password: z.string().trim(),
     student: z.object({
@@ -41,7 +42,7 @@ const createStudentValidationSchema = z.object({
           message: "Gender must be 'male', 'female', or 'other'",
         }),
       }),
-      dateOfBirth: z.date().optional(),
+      dateOfBirth: z.string().optional(),
       contactNo: z
         .string()
         .trim()
@@ -60,10 +61,11 @@ const createStudentValidationSchema = z.object({
         .min(1, 'Permanent Address is Required'),
       guardian: guardianValidationSchema,
       localGuardian: localGuardianValidationSchema,
-      admisstionSemeser: z.string(),
+      admissionSemester: z.string(),
       profileImg: z.string().trim().min(1, 'Student Profile Image is Required'),
     }),
   }),
+
 });
 
 export const studentValidations = {
