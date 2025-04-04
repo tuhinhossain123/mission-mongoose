@@ -26,7 +26,27 @@ const getSingleStudentFromDB = async (id: string) => {
 };
 // updated student
 const updatedStudentFromDB = async (id: string, payload: Partial<TStudent>) => {
-  const result = await Student.findOneAndUpdate({ id }, payload);
+  const { name, guardian, localGuardian, ...remaingStudentData } = payload;
+  const modifieUpdateData: Record<string, unknown> = { ...remaingStudentData };
+  if (name && Object.keys(name).length) {
+    for (const [key, value] of Object.entries(name)) {
+      modifieUpdateData[`name.${key}`] = value;
+    }
+  }
+  if (guardian && Object.keys(guardian).length) {
+    for (const [key, value] of Object.entries(guardian)) {
+      modifieUpdateData[`guardian.${key}`] = value;
+    }
+  }
+  if (localGuardian && Object.keys(localGuardian).length) {
+    for (const [key, value] of Object.entries(localGuardian)) {
+      modifieUpdateData[`localGuardian.${key}`] = value;
+    }
+  }
+  const result = await Student.findOneAndUpdate({ id }, modifieUpdateData, {
+    new: true,
+    runValidators: true,
+  });
   return result;
 };
 
@@ -57,6 +77,7 @@ const deleteStudentFromDB = async (id: string) => {
   } catch (err) {
     await session.abortTransaction();
     await session.endSession;
+    throw new Error('Faild to deleted user');
   }
 };
 export const StudentServices = {
