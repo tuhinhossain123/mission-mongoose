@@ -29,11 +29,11 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
 // single student get
 const getSingleStudentFromDB = async (id: string) => {
   const result = await Student.findOne({ id })
-    .populate('admissionSemester')
-    .populate({
-      path: 'academicDepartment',
-      populate: { path: 'academicFaculty' },
-    });
+    // .populate('admissionSemester')
+    // .populate({
+    //   path: 'academicDepartment',
+    //   populate: { path: 'academicFaculty' },
+    // });
   return result;
 };
 // updated student
