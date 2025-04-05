@@ -10,11 +10,6 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 // post request
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
-  //------------for creating an static method----------- student service theke asce code eta
-  //   if (await Student.isUserExists(studentData.id)) {
-  //     throw new Error('User already exists');
-  //   }
-
   //   ------ creat a user object
   const userData: Partial<TUser> = {};
 
@@ -28,7 +23,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   const admisionSemester = await AcademicSemesterModel.findById(
     payload.admissionSemester,
   );
-  console.log(admisionSemester);
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();

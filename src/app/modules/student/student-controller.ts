@@ -2,9 +2,10 @@ import { StudentServices } from './student-service';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
+import { RequestHandler } from 'express';
 
 // all student get
-const getAllStudent = catchAsync(async (req, res) => {
+const getAllStudent:RequestHandler = catchAsync(async (req, res) => {
   const result = await StudentServices.getAllStudentFromDB(req.query);
   sendResponse(res, {
     statusCode: httpStatus.OK,

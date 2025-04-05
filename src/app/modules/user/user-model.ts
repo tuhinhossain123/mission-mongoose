@@ -3,6 +3,7 @@ import { TUser } from './user-interface';
 import config from '../../config';
 import bcrypt from 'bcrypt';
 
+
 const userSchema = new Schema<TUser>(
   {
     id: { type: String, required: true, unique: true },
@@ -38,6 +39,8 @@ userSchema.pre('save', async function (next) {
   );
   next();
 });
+
+
 
 // post save middleware/ hook
 userSchema.post('save', function (doc, next) {

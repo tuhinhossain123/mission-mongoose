@@ -14,15 +14,15 @@ const academicDepartmentSchema = new Schema<TAcademicDepartment>(
 );
 
 // ekoi name a 2 ta department create na kora
-// academicDepartmentSchema.pre('save', async function (next) {
-//   const isDepartmentExists = await AcademicDepartment.findOne({
-//     name: this.name,
-//   });
-//   if (isDepartmentExists) {
-//     throw new AppError(404, 'This Department dose not exist!');
-//   }
-//   next();
-// });
+academicDepartmentSchema.pre('save', async function (next) {
+  const isDepartmentExists = await AcademicDepartment.findOne({
+    name: this.name,
+  });
+  if (isDepartmentExists) {
+    throw new AppError(404, 'This Department dose not exist!');
+  }
+  next();
+});
 
 // data deleted kore dewar poreo update korle data update hye jay seta na hoyar
 
