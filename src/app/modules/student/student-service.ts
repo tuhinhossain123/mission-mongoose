@@ -8,6 +8,7 @@ import { TStudent } from './student-interface';
 const getAllStudentFromDB = async (query: Record<string, unknown>) => {
   const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
   const queryObj = { ...query };
+
   let searchTerm = '';
   if (query?.searchTerm) {
     searchTerm = query?.searchTerm as string;
@@ -19,10 +20,11 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
     })),
   });
 
-  // filtering
-  const excludeFields = ['searchTerm', 'sort', 'limit'];
-
+  // filtering   email query,sorting,limit,paginatio
+  const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields'];
   excludeFields.forEach((el) => delete queryObj[el]);
+  console.log({ query }, { queryObj });
+
   const filterQuery = searchQuery.find(queryObj);
   // .populate('admissionSemester')
   // .populate({
@@ -36,13 +38,30 @@ const getAllStudentFromDB = async (query: Record<string, unknown>) => {
   }
   const sortQuery = filterQuery.sort(sort);
 
+  let page = 1;
   let limit = 1;
-  if (query.limit) {
-    limit = query.limit ;
-  }
-  const limitQuery = await sortQuery.limit(limit);
+  let skip = 0;
 
-  return limitQuery;
+  if (query.limit) {
+    limit = Number(query.limit);
+  }
+
+  if (query.page) {
+    page = Number(query.page);
+    skip = (page - 1) * limit;
+  }
+  const paginateQuery = sortQuery.skip(skip);
+  const limitQuery = paginateQuery.limit(limit);
+
+  // fields
+  let fields = '-__v';
+  if (query.fields) {
+    fields = (query.fields as string).split(',').join(' ');
+  }
+
+  const fieldQuery =await limitQuery.select(fields);
+
+  return fieldQuery;
 };
 
 // single student get
