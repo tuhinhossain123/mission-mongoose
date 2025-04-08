@@ -15,12 +15,15 @@ router.post(
 router.get('/', SemesterRegistrationControllers.getAllSemesterRegistration);
 
 router.get(
-  '/:facultyId',
+  '/:id',
   SemesterRegistrationControllers.getSingleSemesterRegistration,
 );
 
 router.patch(
-  '/:facultyId',
+  '/:id',
+  validateRequest(
+    SemesterRegistrationValidationSchema.updateSemesterRegistrationValidationSchema,
+  ),
   SemesterRegistrationControllers.updateSemesterRegistration,
 );
 

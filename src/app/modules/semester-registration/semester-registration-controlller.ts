@@ -21,42 +21,42 @@ const createSemesterRegistration = catchAsync(async (req, res) => {
 // get all academic semester
 const getAllSemesterRegistration = catchAsync(async (req, res) => {
   const result =
-    await SemesterRegistrationServices.getAllSemesterRegistrationIntoDB();
+    await SemesterRegistrationServices.getAllSemesterRegistrationIntoDB(
+      req.query,
+    );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'All Academic Faculty Get Successfully',
+    message: 'Semester Registration Get Successfully',
     data: result,
   });
 });
 
 // get single academic semester
 const getSingleSemesterRegistration = catchAsync(async (req, res) => {
-  const { facultyId } = req.params;
+  const { id } = req.params;
   const result =
-    await SemesterRegistrationServices.getSingleSemesterRegistrationFromDB(
-      facultyId,
-    );
+    await SemesterRegistrationServices.getSingleSemesterRegistrationFromDB(id);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Faculty is retrived Successfully',
+    message: 'Single semester registration is retrived Successfully',
     data: result,
   });
 });
 
 //updated semester
 const updateSemesterRegistration = catchAsync(async (req, res) => {
-  const { facultyId } = req.params;
+  const { id } = req.params;
   const result =
     await SemesterRegistrationServices.updateSemesterRegistrationIntoDB(
-      facultyId,
+      id,
       req.body,
     );
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic Faculty is update Successfully',
+    message: 'Semester Registration is update Successfully',
     data: result,
   });
 });
