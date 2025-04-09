@@ -11,10 +11,10 @@ import httpStatus from 'http-status';
 const createOfferdCourseIntoDB = async (payload: TOfferedCourse) => {
   const {
     semesterRegistration,
-    academicSemester,
     academicFaculty,
     academicDepartment,
     course,
+    section,
     faculty,
   } = payload;
 
@@ -29,7 +29,7 @@ const createOfferdCourseIntoDB = async (payload: TOfferedCourse) => {
     );
   }
 
-  const academicSemesterr = isSemesterRegistrationExits.academicSemester;
+  const academicSemester = isSemesterRegistrationExits.academicSemester;
 
   const isAcademicFacultyExits =
     await AcademicFaculty.findById(academicFaculty);
@@ -57,7 +57,30 @@ const createOfferdCourseIntoDB = async (payload: TOfferedCourse) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Faculty not found !');
   }
 
-  const result = await OfferedCourse.create({ ...payload, academicSemesterr });
+  // check if the department is belong to the faculty
+  const isDepartmentBelogToFaculty = await AcademicDepartment.findOne({
+    _id: academicDepartment,
+    academicFaculty,
+  });
+  if (!isDepartmentBelogToFaculty) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `This ${isAcademicDepartmentExits.name} is not to this ${isAcademicFacultyExits.name}`,
+    );
+  }
+
+  // check if the same offered course same section in same registered semester exists
+  const isSemesterOfferedCourseExistWithSemeRegisterdSemeserWithSemeSection =
+    await OfferedCourse.findOne({ semesterRegistration, course, section });
+
+  if (isSemesterOfferedCourseExistWithSemeRegisterdSemeserWithSemeSection) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      `Offered course with same section is alredy exist!`,
+    );
+  }
+
+  const result = await OfferedCourse.create({ ...payload, academicSemester });
   return result;
 };
 
