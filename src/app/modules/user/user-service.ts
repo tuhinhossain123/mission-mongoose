@@ -4,19 +4,20 @@ import mongoose from 'mongoose';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import { Admin } from '../Admin/admin-model';
-import { TFaculty } from '../Faculty/faculty-interface';
 import { Faculty } from '../Faculty/faculty-model';
 import { AcademicDepartment } from '../academic-department/academic-department-model';
 import { TStudent } from '../student/student-interface';
 import { Student } from '../student/student-model';
-import { AcademicSemesterModel } from '../academic-semester/academic-semester-model';
-import { TUser } from './user-interface';
-import { User } from './user-model';
+
 import {
   generateAdminId,
   generateFacultyId,
   generateStudentId,
 } from './user-utils';
+import { AcademicSemester } from '../academic-semester/academic-semester-model';
+import { TFaculty } from '../Faculty/faculty-interface';
+import { TUser } from './user-interface';
+import { User } from './user-model';
 
 const createStudentIntoDB = async (password: string, payload: TStudent) => {
   // create a user object
@@ -29,7 +30,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
   userData.role = 'student';
 
   // find academic semester info
-  const admissionSemester = await AcademicSemesterModel.findById(
+  const admissionSemester = await AcademicSemester.findById(
     payload.admissionSemester,
   );
 
@@ -175,6 +176,8 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
     throw new Error(err);
   }
 };
+
+
 
 export const UserServices = {
   createStudentIntoDB,
