@@ -60,10 +60,22 @@ const forgatePassword = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const resetPassword = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+  const result = await AuthService.resetPassword(req.body, token);
+  //  send response
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reset password succesfully',
+    data: result,
+  });
+});
 
 export const AuthController = {
   loginUser,
   changePassword,
   refreshToken,
   forgatePassword,
+  resetPassword,
 };
