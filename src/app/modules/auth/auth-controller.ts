@@ -49,9 +49,21 @@ const refreshToken = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const forgatePassword = catchAsync(async (req, res) => {
+  const userId = req.body.id;
+  const result = await AuthService.forgatePassword(userId);
+  //  send response
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reset link is genereted succesfully',
+    data: result,
+  });
+});
 
 export const AuthController = {
   loginUser,
   changePassword,
   refreshToken,
+  forgatePassword,
 };
