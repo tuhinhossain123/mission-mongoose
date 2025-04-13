@@ -175,8 +175,8 @@ const forgatePassword = async (userId: string) => {
     '10m',
   );
 
-  const resetUiLink = `http://localhost:3000?id=${user.id}&token=${resetToken}`;
-  sendEmail();
+  const resetUiLink = `${config.reset_pass_ui_link} ?id=${user.id}&token=${resetToken}`;
+  sendEmail(user.email, resetUiLink);
 };
 
 export const AuthService = {
