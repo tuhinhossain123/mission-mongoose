@@ -57,8 +57,9 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
     payload.id = newUser[0].id;
     payload.user = newUser[0]._id; //reference _id
 
-    // create a student (transaction-2)
+    
 
+    // create a student (transaction-2)
     const newStudent = await Student.create([payload], { session });
 
     if (!newStudent.length) {
