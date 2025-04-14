@@ -28,27 +28,40 @@ const createLocalGuardianValidationSchema = z.object({
 // Student Schema
 const createStudentValidationSchema = z.object({
   body: z.object({
+    passwor: z.string().max(20).optional(),
     student: z
       .object({
         name: createUserNameValidationSchema,
-        email: z.string().trim().email('Invalid email format').min(1, 'Email is Required'),
+        email: z
+          .string()
+          .trim()
+          .email('Invalid email format')
+          .min(1, 'Email is Required'),
         gender: z.enum(['male', 'female', 'other']),
         dateOfBirth: z.string().optional(),
-        contactNo: z.string().trim().length(11, 'Contact No must be exactly 11 characters'),
-        emergencyContactNo: z.string().trim().min(1, 'Emergency Contact No is Required'),
+        contactNo: z
+          .string()
+          .trim()
+          .length(11, 'Contact No must be exactly 11 characters'),
+        emergencyContactNo: z
+          .string()
+          .trim()
+          .min(1, 'Emergency Contact No is Required'),
         bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-']),
         presentAddress: z.string().trim().min(1, 'Present Address is Required'),
-        permanentAddress: z.string().trim().min(1, 'Permanent Address is Required'),
+        permanentAddress: z
+          .string()
+          .trim()
+          .min(1, 'Permanent Address is Required'),
         guardian: createGuardianValidationSchema,
         localGuardian: createLocalGuardianValidationSchema,
         admissionSemester: z.string(),
         academicDepartment: z.string(),
-        profileImg: z.string().trim().min(1, 'Student Profile Image is Required'),
+        // profileImg: z.string(),
       })
-      .optional(), // This allows requests without student
+      .optional(),
   }),
 });
-
 
 // update UserName Schema
 const updateUserNameValidationSchema = z.object({
