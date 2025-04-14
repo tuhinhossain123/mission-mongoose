@@ -10,6 +10,7 @@ const createStudent: RequestHandler = async (req, res, next) => {
     const { password, student: studentData } = req.body;
     // zod validation code ekhane
     const result = await UserServices.createStudentIntoDB(
+     req.file,
       password,
       studentData,
     );

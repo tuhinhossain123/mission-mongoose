@@ -1,24 +1,38 @@
 import { v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
+import fs from 'fs';
 
-export const sendImgToCloudinary = () => {
+cloudinary.config({
+  cloud_name: config.bcrypt_salt_rounds,
+  api_key: config.cloudinary_api_key,
+  api_secret: config.cloudinary_secret_key,
+});
+
+export const sendImgToCloudinary = (imageName: string, path: string) => {
   // Configuration
-  cloudinary.config({
-    cloud_name: config.bcrypt_salt_rounds,
-    api_key: config.cloudinary_api_key,
-    api_secret: config.cloudinary_secret_key, // Click 'View API Keys' above to copy your API secret
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      path,
+      {
+        public_id: imageName,
+      },
+      function (error, result) {
+        if (error) {
+          reject(error);
+        }
+        resolve(result);
+        // delete a file asynchronously
+        fs.unlink(path, (err) => {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log('file is deleted');
+          }
+        });
+      },
+    );
   });
-
-  cloudinary.uploader.upload(
-    'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg',
-    {
-      public_id: 'shoes',
-    },
-    function (error, result) {
-      console.log(result);
-    },
-  );
 };
 
 const storage = multer.diskStorage({
